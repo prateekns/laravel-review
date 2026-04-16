@@ -269,8 +269,8 @@ function ensureBaseBranchFetched(): void
 function getGitDiff($currentSha, $lastSha = null): string
 {
     if ($lastSha) {
-        echo "Incremental diff: $lastSha → $current\n";
-        $cmd = "git diff $lastSha $current";
+        echo "Incremental diff: $lastSha → $currentSha\n";
+        $cmd = "git diff $lastSha $currentSha";
         // $result = runCommand("git diff $lastSha $current") ?? '';
     }else {
         $cmd = 'git diff --unified=0 ' . escapeshellarg(BASE_BRANCH_REF . '...HEAD');
