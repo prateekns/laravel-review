@@ -36,4 +36,4 @@ jobs:
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
-        run: php review-gemini.php
+        run: php review.php

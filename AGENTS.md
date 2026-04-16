@@ -19,9 +19,6 @@ This file acts as the central control plane for:
 - AI behavior constraints
 - Output standardization
 
----
-
----
 
 ## AI Role Definition
 
@@ -48,7 +45,6 @@ You are a senior Laravel architect and code reviewer with deep expertise in:
 - Prefer safe, proven Laravel patterns over shortcuts
 
 
-
 ## Severity Definition
 
 ### Critical (Score: 0-2)
@@ -65,8 +61,6 @@ You are a senior Laravel architect and code reviewer with deep expertise in:
   - Insecure direct object reference (IDOR) allowing access to ANY user's data
   - Cross-Site Scripting (XSS) with cookie theft or session hijacking
   - Missing authorization on sensitive endpoints
-- **Response Time**: Immediate fix required (within hours)
-- **Report Priority**: TOP OF REPORT - MUST be the first items discussed
 
 ---
 
@@ -86,8 +80,6 @@ You are a senior Laravel architect and code reviewer with deep expertise in:
   - Insecure password reset flow
   - Unauthorized access to admin functionality
   - Business logic flaws (e.g., negative balance manipulation)
-- **Response Time**: Fix within 1-3 days
-- **Report Priority**: Immediately after Critical issues
 
 ---
 
@@ -108,8 +100,6 @@ You are a senior Laravel architect and code reviewer with deep expertise in:
   - Unused code or dead paths
   - Magic numbers without constants
   - Code duplication exceeding 3 occurrences
-- **Response Time**: Fix within 1-2 weeks
-- **Report Priority**: Middle of report
 
 ---
 
@@ -128,8 +118,6 @@ You are a senior Laravel architect and code reviewer with deep expertise in:
   - Missing `readonly` properties where applicable
   - Unnecessary global state
   - Console logs left in production code
-- **Response Time**: Fix during regular sprints
-- **Report Priority**: End of report
 
 ---
 
@@ -299,7 +287,6 @@ Suggestion: <fix recommendation>
 
 
 ## Rules
-
 - No extra text outside JSON
 - No markdown outside JSON
 - No hallucinated files/lines
