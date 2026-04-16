@@ -125,10 +125,11 @@ function main(): void
 
     // echo $userPrompt."\n\n";
 
-    echo $userPrompt;
+    // echo $userPrompt;
     
 
     $openAiRawResponse = callOpenAi($openAiApiKey, $openAiModel, $userPrompt);
+    echo '<pre/>';print_r($openAiRawResponse);
     $reviewJsonText = extractOpenAiText($openAiRawResponse);
 
     try {
