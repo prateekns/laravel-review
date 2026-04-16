@@ -379,7 +379,6 @@ function callOpenAi(string $apiKey, string $model, string $userPrompt): string
     }
 
     $resp = httpRequest('POST', $url, [
-        'Authorization: Bearer ' . $apiKey,
         'Content-Type: application/json',
         'Accept: application/json',
     ], $json);
