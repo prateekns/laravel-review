@@ -1,0 +1,335 @@
+/* Checklist page styling */
+.checklist-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.checklist-header {
+    margin-bottom: 30px;
+}
+
+.checklist-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.description {
+    color: #6b7280;
+}
+
+.checklist-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.checklist-section {
+    background-color: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f3f4f6;
+    cursor: pointer;
+}
+
+.section-header h2 {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.btn-add-header {
+    background: none;
+    border: none;
+    color: #4f46e5;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.chevron {
+    transition: transform 0.2s;
+}
+
+.section-header.active .chevron {
+    transform: rotate(180deg);
+}
+
+.section-content {
+    display: none;
+    padding: 20px;
+}
+
+.section-content.active {
+    display: block;
+}
+
+.checklist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 8px;
+}
+
+.item-details {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.item-checkbox {
+    margin-right: 12px;
+}
+
+.item-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #4f46e5;
+    cursor: pointer;
+}
+
+.item-name {
+    font-size: 16px;
+}
+
+.item-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit,
+.btn-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.btn-edit {
+    color: #4f46e5;
+}
+
+.btn-delete {
+    color: #ef4444;
+}
+
+.no-items-message {
+    padding: 20px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e5e7eb;
+}
+
+button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-cancel-checklist {
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.btn-save-checklist {
+    background-color: #4f46e5;
+    border: 1px solid #4338ca;
+    color: white;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.modal-header h1 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #6b7280;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+}
+
+.btn-cancel {
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.btn-save {
+    background-color: #4f46e5;
+    border: 1px solid #4338ca;
+    color: white;
+}
+
+/* Add button inside collapsible section */
+.add-button-container {
+    padding: 15px 20px 0 20px;
+    text-align: right;
+}
+
+.btn-add-section {
+    background: none;
+    border: none;
+    color: #4CAF50;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+.btn-add-section:hover {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 4px;
+}
+
+.custom-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: none;
+}
+
+.custom-dialog.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog-content {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dialog-content h3 {
+    margin: 0 0 16px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.dialog-content p {
+    margin: 0 0 24px 0;
+    color: #666;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.dialog-actions button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.dialog-actions .btn-cancel {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.dialog-actions .btn-cancel:hover {
+    background-color: #e4e4e4;
+}
+
+.dialog-actions .btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.dialog-actions .btn-delete:hover {
+    background-color: #c82333;
+}

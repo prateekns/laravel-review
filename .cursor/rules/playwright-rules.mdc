@@ -1,0 +1,90 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 🎯 TASK: Generate Playwright test spec file from BDD feature scenarios
+
+---
+
+## 🧠 REQUIREMENTS:
+
+- Use **JavaScript** with **ES6 modules** (no TypeScript).
+- Organize reusable functions in the `utils/` directory as named exports.
+- Create common helper methods (e.g., login, form filling, navigation) inside `utils/common.js`.
+- Use the shared login helper (e.g., `loginAsBusinessAdmin(page)` or `loginAsSuperAdmin(page)`) from `utils/`.
+- Parse and implement **each BDD step (Given, When, Then, And)** as Playwright test steps.
+- Ensure the user logs in **once before all tests** in the spec and stays logged in for all scenarios (do NOT log out and log in before every test).
+- Group related tests using `test.describe()`.
+- Implement each BDD scenario as a separate `test()` block.
+- Use clear, descriptive test titles derived from scenario titles.
+- Use Playwright’s recommended selectors, e.g. `input[name="first_name"]`, `button[type="submit"]`, and text assertions.
+- Check success and error messages explicitly.
+- Handle redirections and URL assertions where relevant.
+- Add comments in the code for clarity.
+- Use `beforeAll` or `test.beforeAll` for login/setup.
+- Use `test.afterAll` or similar hooks if needed for cleanup.
+- Use Playwright’s `expect` assertions for validation.
+- Handle asynchronous flows with async/await.
+- Structure imports clearly at the top.
+- Avoid duplication by calling common functions from utils.
+- Add meaningful console logs for debug if necessary.
+- Assume the test page URL is known or provided via env variables.
+- Map common BDD steps (e.g., "Given I am logged in as Business Admin") to reusable helper functions in `utils/`.
+- Use a step-driven approach in test implementation for clarity and maintainability.
+- Use comments to show which step from the feature file is being implemented.
+
+---
+
+## 🔧 INPUT:
+
+- The BDD `.feature` file describing the scenarios.
+- Shared helpers in `utils/common.js` or role-specific login helpers in `utils/`.
+
+---
+
+## ✅ OUTPUT:
+
+- A fully working Playwright test spec file (`.spec.js`) that implements all scenarios from the feature file.
+- Organized, maintainable, and reusable code.
+
+---
+
+## SAMPLE START (for your guidance only):
+
+```js
+import { test, expect } from '@playwright/test';
+import { loginAsBusinessAdmin, fillSubadminForm, submitForm, checkSuccessMessage } from '../../utils/common.js';
+
+test.describe('Business Subadmin Creation', () => {
+  test.beforeAll(async ({ browser }) => {
+    // Create a new browser context and page
+    const context = await browser.newContext();
+    global.page = await context.newPage();
+    // Login once before all tests
+    await loginAsBusinessAdmin(global.page);
+    // Navigate to the subadmin add page
+    await global.page.goto('/business-management/sub-admins/add');
+  });
+
+  test('Successfully create a Subadmin with valid details', async () => {
+    // Fill form fields
+    await fillSubadminForm(global.page, {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+    });
+    await submitForm(global.page);
+    await checkSuccessMessage(global.page, 'Subadmin created successfully');
+    // Validate redirection or page update
+    await expect(global.page).toHaveURL(/\/sub-admins$/);
+  });
+
+  // Additional tests for error scenarios, validation, etc.
+
+  test.afterAll(async () => {
+    // Cleanup if necessary
+    await global.page.close();
+  });
+});
+

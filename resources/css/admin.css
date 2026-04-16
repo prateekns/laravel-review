@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+    --font-onest: "Onest", system-ui, sans-serif;
+    --color-black: #212529;
+    --color-black-100: #4b5563;
+    --color-pool-gray-50: #FAFBFC;
+    --color-pool-gray-100: #EEEEEE;
+    --color-pool-gray-200: #ECECEC;
+    --color-pool-gray-300: #DFE1E6;
+    --color-pool-gray-400: #797979;
+    --color-pool-gray-500: #5A5A5A;
+    --color-pool-gray-600: #4C4C4C;
+    --color-pool-gray-700: #353535;
+    --color-bg-gray-100: #F3F4F6;
+
+    --color-pool-warning-bg: #D9D9D9;
+    --color-pool-warning-icon-bg: #9E9E9E;
+    --color-pool-warning-icon-stroke: #2C2C2C;
+    --text-xl: 1.5rem;
+    --text-xs: 1rem;
+    --shadow-sm: 8px 8px 16px 0px #0b25481a;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    /* Font family definitions if needed */
+
+}
+
+body {
+    @apply font-onest;
+}
+
+/* Disable number input arrows for all browsers */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+input[type="checkbox"]:checked+.check-icon {
+    opacity: 1;
+}
+
+/*Edit Form Dashboard*/
+.back-btn {
+    @apply w-auto mb-4 mr-auto flex;
+}
+
+.back-btn>p {
+    @apply flex items-center gap-2;
+}
+
+.back-btn a {
+    @apply text-xs leading-normal;
+}
+
+.white-box {
+    @apply bg-white shadow-sm rounded-xl sm:px-5 sm:py-[34px] p-4 mt-6;
+}
+
+.main-heading {
+    @apply text-xl text-black m-0;
+}
+
+.sub-heading {
+    @apply text-xs text-black-100 mt-2;
+}
+
+/* toaster */
+.message-toaster-box {
+    @apply fixed left-[50%] top-[50px] z-[45] transform translate-x-[-50%] max-[767px]:top-[88px];
+}
+
+.message-toaster-box .toaster-content {
+    @apply flex rounded-[4px] shadow-sm items-center gap-[16px] py-[20px] px-[16px] bg-white;
+}
+
+.message-toaster-box .toaster-content .message .text {
+    @apply text-[14px] text-[#010101] font-[400] w-full min-w-[max-content];
+}
+
+.animate-border-shrink {
+    width: 100%;
+    animation: borderShrink 5s linear forwards;
+}
+
+@keyframes borderShrink {
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
+}
+
+/* toaster */

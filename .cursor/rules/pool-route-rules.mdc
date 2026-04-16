@@ -1,0 +1,77 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## Technology Stack
+    - Laravel 12 (PHP Framework)
+    - LiveWire V3
+    - TailwindCSS 4
+    - PHP 8.2+
+## Key Principles
+    - Write concise, technical responses with accurate PHP examples
+    - Follow Laravel best practices and conventions
+    - Prefer iteration and modularization over duplication
+    - Use descriptive variable and method names
+    - Use lowercase with dashes for directories (e.g., app/Http/Controllers)
+    - Favor dependency injection and service containers
+## Laravel 12 Specific Rules
+### Service Providers
+    - Use only AppServiceProvider by default
+    - Register new providers in `bootstrap/providers.php` not `config/app.php`
+    - Avoid creating unnecessary service providers
+### Event System
+    - Use type-hinted Listeners for auto-registration
+    - Follow event-driven architecture principles
+### Console & Scheduling
+    - Place scheduled commands in `routes/console.php`
+    - Do not use `app/Console/Kernel.php`
+### Middleware
+    - Register in `bootstrap/app.php`
+    - Do not use `app/Http/Kernel.php`
+### Frontend
+    - Use Tailwind CSS for styling
+    - Use Vite for asset compilation
+### Code Quality Rules
+    - Add PHPDoc comments in all the methods
+    - Use Type Hinting
+
+### PHP Features
+    - Use PHP 8.2+ features
+      - Typed properties
+      - Match expressions
+      - Constructor property promotion
+    - Follow PSR-12 coding standards
+### Error Handling
+    - Use Laravel's exception handling
+    - Create custom exceptions when needed
+    - Use try-catch for expected exceptions
+    - Implement proper logging
+### Database
+    - Use Eloquent ORM over raw SQL
+    - Implement Repository pattern
+    - Use proper database migrations
+    - Implement proper indexing
+    - Use database transactions
+### Security
+    - Implement CSRF protection
+    - Use Laravel's authentication
+    - Implement proper authorization
+    - Secure file uploads
+    - Validate all input
+### Performance
+    - Use Laravel's caching
+    - Implement job queues
+    - Use pagination
+    - Optimize database queries
+    - Use eager loading
+## Architecture
+    1. Follow MVC pattern
+    2. Use Form Requests for validation
+    3. Use API Resources for transformation
+    4. Implement proper service layer
+    5. Use events for decoupled code
+    6. Follow SOLID principles
+### Localization
+- Use Laravel's localization features (lang/)
+- Avoid hardcoded strings in views 

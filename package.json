@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:admin:local": "cross-env ENV=local npx playwright test tests/e2e/admin/tests --workers=1",
+    "test:admin:staging": "cross-env ENV=staging npx playwright test tests/e2e/admin/tests --workers=1",
+    "test:business:local": "cross-env ENV=local npx playwright test tests/e2e/business/tests",
+    "test:business:staging": "cross-env ENV=staging npx playwright test tests/e2e/business/tests",
+    "test:all:local": "cross-env ENV=local npx playwright test",
+    "test:all:staging": "cross-env ENV=staging npx playwright test",
+    "test:business:staging-list-subadmin": "cross-env ENV=staging npx playwright test tests/e2e/business/tests/sub-admin/list-subadmin.spec.js --workers=1 --project=chromium --headed"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.8.0",
+    "@playwright/test": "^1.52.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^22.15.19",
+    "axios": "^1.8.2",
+    "concurrently": "^9.0.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.6.0",
+    "laravel-vite-plugin": "^1.2.0",
+    "tailwindcss": "^4.0.0",
+    "vite": "^6.2.4"
+  },
+  "dependencies": {
+    "dropzone": "^6.0.0-beta.2"
+  }
+}

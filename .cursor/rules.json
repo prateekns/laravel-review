@@ -1,0 +1,106 @@
+{
+    "rules": [
+        {
+            "name": "PSR-12 Compliance",
+            "description": "Code must follow PSR-12 coding style guidelines",
+            "patterns": ["**/*.php"],
+            "checks": {
+                "indentation": {
+                    "type": "space",
+                    "size": 4
+                },
+                "lineLength": {
+                    "max": 120
+                },
+                "namingConventions": {
+                    "classes": "PascalCase",
+                    "methods": "camelCase",
+                    "properties": "camelCase",
+                    "constants": "UPPER_CASE"
+                }
+            }
+        },
+        {
+            "name": "OWASP Security",
+            "description": "Code must follow OWASP security guidelines",
+            "patterns": ["**/*.php"],
+            "checks": {
+                "security": {
+                    "sqlInjection": true,
+                    "xss": true,
+                    "csrf": true,
+                    "fileUpload": true,
+                    "authentication": true,
+                    "authorization": true
+                }
+            }
+        },
+        {
+            "name": "Code Quality",
+            "description": "Code quality and maintainability rules",
+            "patterns": ["**/*.php"],
+            "checks": {
+                "complexity": {
+                    "maxCyclomaticComplexity": 10,
+                    "maxMethodLength": 50,
+                    "maxClassLength": 500
+                },
+                "duplicateCode": {
+                    "minLines": 5,
+                    "minTokens": 70
+                },
+                "unusedCode": {
+                    "variables": true,
+                    "parameters": true,
+                    "imports": true
+                }
+            }
+        },
+        {
+            "name": "Laravel Best Practices",
+            "description": "Laravel framework specific best practices",
+            "patterns": ["**/*.php"],
+            "checks": {
+                "laravel": {
+                    "routeNaming": true,
+                    "eloquentRelationships": true,
+                    "validationRules": true,
+                    "serviceContainer": true,
+                    "facades": true,
+                    "serviceProviders": {
+                        "useAppServiceProvider": true,
+                        "registerInBootstrapProviders": true
+                    },
+                    "eventListeners": {
+                        "useTypeHinting": true
+                    },
+                    "consoleScheduler": {
+                        "useRoutesConsole": true
+                    },
+                    "middleware": {
+                        "registerInBootstrapApp": true
+                    },
+                    "views": {
+                        "useTailwind": true
+                    }
+                },
+                "architecture": {
+                    "useRepository": true,
+                    "useEloquentORM": true,
+                    "useMVC": true,
+                    "useFormRequests": true,
+                    "useBladeTemplating": true,
+                    "useApiResources": true,
+                    "useEventListeners": true,
+                    "useTransactions": true
+                },
+                "performance": {
+                    "useCaching": true,
+                    "useQueues": true,
+                    "useIndexing": true,
+                    "usePagination": true
+                }
+            }
+        }
+    ]
+} 

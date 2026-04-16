@@ -1,0 +1,593 @@
+/* Work Order Form Styling */
+.work-order-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.back-link {
+    margin-bottom: 20px;
+}
+
+.back-link a {
+    display: flex;
+    align-items: center;
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.back-link a:hover {
+    color: #000;
+}
+
+.back-link svg {
+    margin-right: 5px;
+}
+
+.work-order-form-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #333;
+}
+
+.form-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.form-section {
+    margin-bottom: 24px;
+}
+
+.client-options {
+    display: flex;
+    margin-bottom: 16px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    margin-right: 24px;
+}
+
+.radio-option input[type="radio"] {
+    margin-right: 8px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.required-field::after {
+    content: "*";
+    color: #e53e3e;
+    margin-left: 4px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Collapsible Sections */
+.collapsible-section {
+    margin-bottom: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.collapsible-btn {
+    width: 100%;
+    background-color: #f9fafb;
+    border: none;
+    padding: 16px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.collapsible-btn:hover {
+    background-color: #f3f4f6;
+}
+
+.collapsible-btn.active {
+    background-color: #f1f5f9;
+}
+
+.circle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: #7b7f87;
+    color: white;
+    border-radius: 50%;
+    margin-right: 12px;
+    font-size: 12px;
+}
+
+.chevron {
+    margin-left: auto;
+    transition: transform 0.3s;
+}
+
+.collapsible-btn.active .chevron {
+    transform: rotate(180deg);
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding: 0 16px;
+}
+
+.collapsible-btn.active+.collapsible-content {
+    padding: 16px;
+}
+
+/* Date and Time inputs */
+.date-time-inputs {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.date-input {
+    flex: 3;
+}
+
+.time-input {
+    flex: 2;
+}
+
+.time-info-btn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 16px;
+}
+
+.time-info-btn:hover {
+    color: #3b82f6;
+}
+
+/* File Upload Section */
+.file-upload-area {
+    margin-bottom: 16px;
+}
+
+.upload-box {
+    border: 2px dashed #d1d5db;
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.upload-box:hover,
+.upload-box.dragover {
+    border-color: #3b82f6;
+}
+
+.custom-file-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.upload-icon {
+    margin-bottom: 12px;
+    color: #6b7280;
+}
+
+.upload-text {
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.or-text {
+    color: #9ca3af;
+}
+
+.file-formats {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+
+.file-list {
+    margin-top: 16px;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+}
+
+/* Notes Section */
+.notes-section {
+    margin-top: 24px;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+}
+
+.btn-primary {
+    background-color: #7b7f87;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #f9fafb;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+    .form-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+
+    .date-time-inputs {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .time-info-btn {
+        align-self: flex-end;
+    }
+}
+
+/* Validation styles */
+.error-input {
+    border: 1px solid #e53e3e !important;
+    background-color: #fff5f5 !important;
+}
+
+.error-message {
+    color: #e53e3e;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Loading spinner for form submission */
+.spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 0.5rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Work Order History Styles */
+.work-order-history {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    display: none;
+}
+
+.work-order-history h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.history-items {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.history-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 5px;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.order-number {
+    font-weight: bold;
+    color: #7b7f87;
+}
+
+.order-date {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.history-item-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.service-type,
+.task-name {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.status {
+    font-size: 0.85em;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+}
+
+.status.pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status.scheduled {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.status.in_progress {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.status.completed {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status.cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.prefill-btn {
+    margin: 10px 0;
+    font-size: 14px;
+    padding: 6px 12px;
+}
+
+/* Client Details Card Styles */
+.client-details-card {
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+.client-details-header {
+    background-color: #7b7f87;
+    color: white;
+    padding: 10px 15px;
+}
+
+.client-details-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.client-details-body {
+    padding: 15px;
+}
+
+.client-details-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.client-details-row:last-child {
+    margin-bottom: 0;
+}
+
+.client-detail {
+    flex: 1 1 45%;
+    min-width: 250px;
+    margin-bottom: 8px;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: #555;
+    margin-right: 8px;
+}
+
+.detail-value {
+    color: #333;
+}
+
+/* Uploaded Files Styles */
+.uploaded-files-container {
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+}
+
+.uploaded-files-container h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+.uploaded-files-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.uploaded-file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    border-radius: 4px;
+    padding: 8px 12px;
+    border: 1px solid #e9e9e9;
+}
+
+.file-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.file-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.file-size {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.file-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.file-view-btn {
+    color: #007bff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+.file-view-btn:hover {
+    background-color: #f0f0f0;
+}
+
+/* Status Section */
+.status-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.status-options {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.status-options .radio-option {
+    display: flex;
+    align-items: center;
+}
+
+.status-options input[type="radio"] {
+    margin-right: 8px;
+}
+
+.status-options label {
+    display: inline;
+    margin-bottom: 0;
+}
