@@ -102,7 +102,7 @@ function main(): void
     $prComments = getPRComments($repo, $prNumber, $githubToken);
     $lastSha = getLastReviewedSha($prComments);
     $diff = getGitDiff($currentSha, $lastSha);
-    echo  $diff ."\n\n";
+    // echo  $diff ."\n\n";
 
 
     // $diff = getGitDiff();
@@ -124,6 +124,8 @@ function main(): void
 
 
     // echo $userPrompt."\n\n";
+
+    echo $userPrompt;
     
 
     $openAiRawResponse = callOpenAi($openAiApiKey, $openAiModel, $userPrompt);
