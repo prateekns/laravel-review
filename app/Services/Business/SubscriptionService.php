@@ -413,6 +413,8 @@ class SubscriptionService
             ]);
             throw $e;
         }
+
+        return [];
     }
 
     /**
