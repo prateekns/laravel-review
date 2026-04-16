@@ -102,7 +102,7 @@ function main(): void
     $prComments = getPRComments($repo, $prNumber, $githubToken);
     $lastSha = getLastReviewedSha($prComments);
     $diff = getGitDiff($currentSha, $lastSha);
-
+    echo  $diff ."\n\n";
 
 
     // $diff = getGitDiff();
@@ -1192,7 +1192,7 @@ function fetchInlinePrComments(string $githubToken, string $repo, int $prNumber)
     }
 
     $data = json_decode($resp['body'], true);
-    echo '<pre/>';print_r($data);exit;
+    // echo '<pre/>';print_r($data);exit;
 
     foreach($data as $comment) {
         $inlineComments['path'] = $comment['path'];
