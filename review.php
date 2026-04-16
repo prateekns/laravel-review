@@ -23,6 +23,7 @@ echo "Script started...\n";
 const BASE_BRANCH_REF = 'origin/main';
 const DEFAULT_OPENAI_MODEL = 'gpt-4.1-mini';
 const OPENAI_API_BASE = 'https://api.openai.com/v1';
+const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
 const GITHUB_API_BASE = 'https://api.github.com';
 const MAX_DIFF_BYTES = 400_000;
 const MAX_AGENTS_BYTES = 50_000;
@@ -102,7 +103,7 @@ function main(): void
     $prComments = getPRComments($repo, $prNumber, $githubToken);
     $lastSha = getLastReviewedSha($prComments);
     $diff = getGitDiff($currentSha, $lastSha);
-    // echo  $diff ."\n\n";
+
 
 
     // $diff = getGitDiff();
@@ -124,12 +125,9 @@ function main(): void
 
 
     // echo $userPrompt."\n\n";
-
-    // echo $userPrompt;
     
 
     $openAiRawResponse = callOpenAi($openAiApiKey, $openAiModel, $userPrompt);
-    echo '<pre/>';print_r($openAiRawResponse);
     $reviewJsonText = extractOpenAiText($openAiRawResponse);
 
     try {
@@ -269,8 +267,8 @@ function ensureBaseBranchFetched(): void
 function getGitDiff($currentSha, $lastSha = null): string
 {
     if ($lastSha) {
-        echo "Incremental diff: $lastSha → $currentSha\n";
-        $cmd = "git diff $lastSha $currentSha";
+        echo "Incremental diff: $lastSha → $current\n";
+        $cmd = "git diff $lastSha $current";
         // $result = runCommand("git diff $lastSha $current") ?? '';
     }else {
         $cmd = 'git diff --unified=0 ' . escapeshellarg(BASE_BRANCH_REF . '...HEAD');
@@ -346,54 +344,48 @@ function buildUserPrompt(string $agentsRules, string $diff, bool $diffTruncated,
 
 function callOpenAi(string $apiKey, string $model, string $userPrompt): string
 {
-    $url = OPENAI_API_BASE . '/responses';
-
-    // $payload = [
-    //     'model' => $model,
-    //     'input' => [
-    //         [
-    //             'role' => 'system',
-    //             'content' => [
-    //                 [
-    //                     'type' => 'input_text',
-    //                     'text' => OPENAI_SYSTEM_INSTRUCTION,
-    //                 ],
-    //             ],
-    //         ],
-    //         [
-    //             'role' => 'user',
-    //             'content' => [
-    //                 [
-    //                     'type' => 'input_text',
-    //                     'text' => $userPrompt,
-    //                 ],
-    //             ],
-    //         ],
-    //     ],
-    //     'max_output_tokens' => 2048,
-    // ];
+    // $url = OPENAI_API_BASE . '/responses';
+    $url = GEMINI_API_BASE . rawurlencode($model) . ':generateContent?key=' . rawurlencode($apiKey);
 
     $payload = [
-        "model" => $model,
-        "input" => [
-            ["role" => "system", "content" => OPENAI_SYSTEM_INSTRUCTION],
-            ["role" => "user", "content" => $userPrompt]
-        ]
+        'system_instruction' => [
+            'parts' => [
+                ['text' => OPENAI_SYSTEM_INSTRUCTION]
+            ],
+        ],
+        'contents' => [
+            [
+                'role' => 'user',
+                'parts' => [
+                    ['text' => $userPrompt]
+                ],
+            ],
+        ],
+        'generationConfig' => [
+            'temperature' => 0.2,
+            'maxOutputTokens' => 8192,
+        ],
     ];
+
+    // $payload = [
+    //     "model" => $model,
+    //     "input" => [
+    //         ["role" => "system", "content" => OPENAI_SYSTEM_INSTRUCTION],
+    //         ["role" => "user", "content" => $userPrompt]
+    //     ]
+    // ];
 
 
     $json = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     if ($json === false) {
-        $message = "Failed to encode OpenAI payload.\n";
+        $message = "Failed to encode Gemini payload.\n";
         echo $message;
         fwrite(STDERR, $message);
         exit(1);
     }
 
     $resp = httpRequest('POST', $url, [
-        'Authorization: Bearer ' . $apiKey,
         'Content-Type: application/json',
-        'Accept: application/json',
     ], $json);
 
     // echo '<pre/>';print_r($resp);exit;
@@ -421,9 +413,13 @@ function extractOpenAiText(string $openAiResponseJson): string
         exit(1);
     }
 
-    $text = $data['output'] ?? null;
+    $text = $data['candidate'][0]['content']['parts'][0]['text'] ?? null;
     if (!is_string($text) || trim($text) === '') {
-        $text = extractOpenAiTextFromOutputItems($data);
+        // $text = extractOpenAiTextFromOutputItems($data);
+        $message = "Gemini response missing text content";
+        echo $message;
+        fwrite(STDERR, $message);
+        exit(1);
     }
     if (!is_string($text) || trim($text) === '') {
         $text = extractOpenAiTextFromChatChoices($data);
@@ -1195,7 +1191,7 @@ function fetchInlinePrComments(string $githubToken, string $repo, int $prNumber)
     }
 
     $data = json_decode($resp['body'], true);
-    // echo '<pre/>';print_r($data);exit;
+    echo '<pre/>';print_r($data);exit;
 
     foreach($data as $comment) {
         $inlineComments['path'] = $comment['path'];
