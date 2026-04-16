@@ -349,28 +349,23 @@ function callOpenAi(string $apiKey, string $model, string $userPrompt): string
     $url = GEMINI_API_BASE . rawurlencode($model) . ':generateContent?key=' . rawurlencode($apiKey);
 
     $payload = [
-        'model' => $model,
-        'input' => [
-            [
-                'role' => 'system',
-                'content' => [
-                    [
-                        'type' => 'input_text',
-                        'text' => OPENAI_SYSTEM_INSTRUCTION,
-                    ],
-                ],
+        'system_instruction' => [
+            'parts' => [
+                ['text' => OPENAI_SYSTEM_INSTRUCTION],
             ],
+        ],
+        'contents' => [
             [
                 'role' => 'user',
-                'content' => [
-                    [
-                        'type' => 'input_text',
-                        'text' => $userPrompt,
-                    ],
+                'parts' => [
+                    ['text' => $userPrompt],
                 ],
             ],
         ],
-        // 'max_output_tokens' => 2048,
+        'generationConfig' => [
+            'temperature' => 0.2,
+            'maxOutputTokens' => 2048,
+        ],
     ];
 
 
