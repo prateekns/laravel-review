@@ -41,13 +41,6 @@ You are a strict code reviewer for CI/CD.
 Review ONLY provided git diff.
 Follow AGENTS.md rules if provided.
 
-LINE NUMBERING RULES (CRITICAL):
-- The git diff shows changes with format: @@ -oldLine,oldCount +newLine,newCount @@
-- Lines starting with '+' are NEW lines added in this PR
-- You MUST report the ABSOLUTE line number in the NEW file (the number after '+' in the hunk header)
-- For example, if you see "@@ -45,10 +50,5 @@" and the '+' line is the 3rd line in that hunk, report line 52 (50 + 2)
-- ONLY report issues on lines that start with '+' in the diff
-- If multiple hunks exist, each has its own starting line number - calculate accordingly
 PROMPT;
 
 main();
@@ -109,20 +102,34 @@ function main(): void
     $prComments = getPRComments($repo, $prNumber, $githubToken);
     $lastSha = getLastReviewedSha($prComments);
     $diff = getGitDiff($currentSha, $lastSha);
+    // echo  $diff ."\n\n";
+
+
+    // $diff = getGitDiff();
+    // echo "See difference" ."\n";
+    // echo $diff."\n";
     [$diffForPrompt, $diffTruncated] = truncateBytes($diff, MAX_DIFF_BYTES);
     $diffIndex = buildDiffIndex($diff);
 
     $agentsRules = readAgentsRules();
 
+    // echo $agentsRules."\n";
 
     $prCommentsInline = fetchInlinePrComments($githubToken, $repo, $prNumber);
     $rejectPrompt = buildRejectPrompt($prCommentsInline);
 
+    // echo $rejectPrompt."\n\n";
 
     $userPrompt = buildUserPrompt($agentsRules, $diffForPrompt, $diffTruncated, $rejectPrompt);
 
 
+    // echo $userPrompt."\n\n";
+
+    // echo $userPrompt;
+    
+
     $openAiRawResponse = callOpenAi($openAiApiKey, $openAiModel, $userPrompt);
+    echo '<pre/>';print_r($openAiRawResponse);
     $reviewJsonText = extractOpenAiText($openAiRawResponse);
 
     try {
@@ -168,23 +175,16 @@ function main(): void
         foreach ($review['issues'] as $issue) {
             $file = $issue['file'];
             $line = (int)$issue['line'];
-
-            // Convert line number to position for GitHub API
-            $position = $diffIndex[$file]['lines'][$line] ?? null;
-            if ($position === null) {
-                fwrite(STDERR, "Warning: Could not find position for {$file}:{$line}\n");
-                continue;
-            }
-
+        
             $body = buildInlineCommentBody($issue, $openAiModel);
-
+        
             postInlineComment(
                 $githubToken,
                 $repo,
                 $prNumber,
                 $currentSha,
                 $file,
-                $position,
+                $line,
                 $body
             );
         }
@@ -268,11 +268,11 @@ function ensureBaseBranchFetched(): void
 
 function getGitDiff($currentSha, $lastSha = null): string
 {
-    if ($lastSha && $currentSha) {
+    if ($lastSha) {
         echo "Incremental diff: $lastSha → $currentSha\n";
-        // Use three-dot notation to show changes introduced since lastSha
-        $cmd = 'git diff --unified=0 ' . escapeshellarg("{$lastSha}...{$currentSha}");
-    } else {
+        $cmd = "git diff $lastSha $currentSha";
+        // $result = runCommand("git diff $lastSha $current") ?? '';
+    }else {
         $cmd = 'git diff --unified=0 ' . escapeshellarg(BASE_BRANCH_REF . '...HEAD');
     }
 
@@ -743,23 +743,21 @@ function validateReviewPayload($review): array
 }
 
 /**
- * @return array<string, array{lines: array<int, int>, scopes: array<int, string>, positions: array<int, int>}>
+ * @return array<string, array{lines: array<int, bool>, scopes: array<int, string>}>
  */
 function buildDiffIndex(string $diff): array
 {
     $index = [];
     $currentFile = null;
     $newLine = 0;
-    $position = 0;
     $scope = '';
 
     foreach (explode("\n", $diff) as $line) {
         if (str_starts_with($line, '+++ b/')) {
             $currentFile = substr($line, 6);
             if (!isset($index[$currentFile])) {
-                $index[$currentFile] = ['lines' => [], 'scopes' => [], 'positions' => []];
+                $index[$currentFile] = ['lines' => [], 'scopes' => []];
             }
-            $position = 0;
             continue;
         }
 
@@ -767,10 +765,9 @@ function buildDiffIndex(string $diff): array
             continue;
         }
 
-        if (preg_match('/^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@\s*(.*)$/', $line, $m) === 1) {
-            $newLine = (int) $m[2];
-            $scope = trim((string) ($m[3] ?? ''));
-            $position++;
+        if (preg_match('/^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@\s*(.*)$/', $line, $m) === 1) {
+            $newLine = (int) $m[1];
+            $scope = trim((string) ($m[2] ?? ''));
             continue;
         }
 
@@ -780,13 +777,11 @@ function buildDiffIndex(string $diff): array
 
         $prefix = $line[0];
         if ($prefix === '+') {
-            $index[$currentFile]['lines'][$newLine] = $position;
-            $index[$currentFile]['positions'][$position] = $newLine;
+            $index[$currentFile]['lines'][$newLine] = true;
             if ($scope !== '') {
                 $index[$currentFile]['scopes'][$newLine] = $scope;
             }
             $newLine++;
-            $position++;
             continue;
         }
 
@@ -795,11 +790,6 @@ function buildDiffIndex(string $diff): array
                 $index[$currentFile]['scopes'][$newLine] = $scope;
             }
             $newLine++;
-            $position++;
-        }
-
-        if ($prefix === '-') {
-            $position++;
         }
     }
 
@@ -808,7 +798,7 @@ function buildDiffIndex(string $diff): array
 
 /**
  * @param array<string, mixed> $review
- * @param array<string, array{lines: array<int, int>, scopes: array<int, string>, positions: array<int, int>}> $diffIndex
+ * @param array<string, array{lines: array<int, bool>, scopes: array<int, string>}> $diffIndex
  * @return array<string, mixed>
  */
 function enrichIssuesWithScope(array $review, array $diffIndex): array
@@ -836,7 +826,7 @@ function enrichIssuesWithScope(array $review, array $diffIndex): array
 }
 
 /**
- * @param array<string, array{lines: array<int, int>, scopes: array<int, string>, positions: array<int, int>}> $diffIndex
+ * @param array<string, array{lines: array<int, bool>, scopes: array<int, string>}> $diffIndex
  */
 function findNearestScope(array $diffIndex, string $file, int $line): string
 {
@@ -860,7 +850,7 @@ function findNearestScope(array $diffIndex, string $file, int $line): string
 
 /**
  * @param array<string, mixed> $review
- * @param array<string, array{lines: array<int, int>, scopes: array<int, string>, positions: array<int, int>}> $diffIndex
+ * @param array<string, array{lines: array<int, bool>, scopes: array<int, string>}> $diffIndex
  * @return string[]
  */
 function validateIssuesAgainstDiff(array $review, array $diffIndex): array
@@ -1142,7 +1132,7 @@ function postInlineComment(
     int $prNumber,
     string $commitSha,
     string $filePath,
-    int $position,
+    int $line,
     string $body
 ): void {
     $url = GITHUB_API_BASE . "/repos/{$repo}/pulls/{$prNumber}/comments";
@@ -1151,7 +1141,8 @@ function postInlineComment(
         'body' => $body,
         'commit_id' => $commitSha,
         'path' => $filePath,
-        'position' => $position
+        'line' => $line,
+        'side' => 'RIGHT'
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
     $resp = httpRequest('POST', $url, [
@@ -1235,8 +1226,8 @@ function buildRejectPrompt($prCommentsInline){
             if(isset($prComment['reply']) && (in_array("reject",$prComment['reply']) || in_array("ignore",$prComment['reply']))){
                 $path = $prComment['path'];
                 $message = $prComment['body'];
-                // $rejectBody.= "file: {$path} \nmessage: {$message}\n\n";
-                $rejectBody.= "message: {$message}\n\n";
+                $rejectBody.= "file: {$path} \nmessage: {$message}\n\n";
+                // $rejectBody.= "message: {$message}\n\n";
             }
         }
     }
