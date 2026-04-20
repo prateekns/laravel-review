@@ -31,6 +31,7 @@ const MAX_LOG_BYTES = 20_000;
 const CURL_TIMEOUT_SECONDS = 180;
 const CURL_CONNECT_TIMEOUT_SECONDS = 15;
 const USER_AGENT = 'ai-review-php/1.0';
+const DUMP_DIFF_INDEX= 1;
 
 /**
  * MUST embed system instruction inside this script.
@@ -68,7 +69,7 @@ main();
 
 function main(): void
 {
-    $dryRun = false;
+    $dryRun = true;
 
     // $openAiApiKey = requireEnv('OPENAI_API_KEY');
     // $githubToken = $dryRun ? (string) (getenv('GITHUB_TOKEN') ?: '') : requireEnv('GITHUB_TOKEN');
@@ -83,6 +84,8 @@ function main(): void
         $repo = getenv('GITHUB_REPOSITORY');
         $prNumber = (int)getenv('PR_NUMBER');
         $currentSha = getenv('PR_HEAD_SHA');
+
+
 
 
     $openAiModel = $model !== false && trim($model) !== '' ? trim($model) : DEFAULT_OPENAI_MODEL;
@@ -111,6 +114,15 @@ function main(): void
     $diff = getGitDiff($currentSha, $lastSha);
     [$diffForPrompt, $diffTruncated] = truncateBytes($diff, MAX_DIFF_BYTES);
     $diffIndex = buildDiffIndex($diff);
+
+    // When DUMP_DIFF_INDEX=1 is set, print the position table and exit.
+    // Use this to verify inline comment positions before posting to GitHub.
+    if (isTruthyEnv('DUMP_DIFF_INDEX')) {
+        dumpDiffIndex($diffIndex);
+        exit(0);
+    }
+
+    exit;
 
     $agentsRules = readAgentsRules();
 
@@ -743,6 +755,86 @@ function validateReviewPayload($review): array
 }
 
 /**
+ * Print a formatted table of the diff index to STDOUT.
+ *
+ * Columns: File | New-file line | Diff position | Scope (function/class context)
+ *
+ * Enable with env var: DUMP_DIFF_INDEX=1
+ * Example: DUMP_DIFF_INDEX=1 PR_HEAD_SHA=abc123 php review.php
+ *
+ * @param array<string, array{lines: array<int, int>, scopes: array<int, string>, positions: array<int, int>}> $diffIndex
+ */
+function dumpDiffIndex(array $diffIndex): void
+{
+    if ($diffIndex === []) {
+        fwrite(STDOUT, "Diff index is empty — no added lines found.\n");
+        return;
+    }
+
+    $COL_FILE     = 50;
+    $COL_LINE     = 10;
+    $COL_POSITION = 10;
+    $COL_SCOPE    = 40;
+
+    $header = sprintf(
+        "%-{$COL_FILE}s  %-{$COL_LINE}s  %-{$COL_POSITION}s  %-{$COL_SCOPE}s\n",
+        'File',
+        'New Line',
+        'Position',
+        'Scope'
+    );
+    $separator = str_repeat('-', $COL_FILE + $COL_LINE + $COL_POSITION + $COL_SCOPE + 6) . "\n";
+
+    $totalFiles = count($diffIndex);
+    $totalLines = 0;
+
+    fwrite(STDOUT, "\n=== DIFF INDEX (DUMP_DIFF_INDEX=1) ===\n\n");
+
+    foreach ($diffIndex as $file => $data) {
+        $lines    = $data['lines']    ?? [];
+        $scopes   = $data['scopes']   ?? [];
+
+        if ($lines === []) {
+            continue;
+        }
+
+        fwrite(STDOUT, $separator);
+        fwrite(STDOUT, $header);
+        fwrite(STDOUT, $separator);
+
+        ksort($lines);
+        foreach ($lines as $newLine => $position) {
+            $scope = $scopes[$newLine] ?? '';
+            if (strlen($scope) > $COL_SCOPE) {
+                $scope = substr($scope, 0, $COL_SCOPE - 3) . '...';
+            }
+            $displayFile = strlen($file) > $COL_FILE
+                ? '...' . substr($file, -(int)($COL_FILE - 3))
+                : $file;
+
+            fwrite(STDOUT, sprintf(
+                "%-{$COL_FILE}s  %-{$COL_LINE}d  %-{$COL_POSITION}d  %-{$COL_SCOPE}s\n",
+                $displayFile,
+                $newLine,
+                $position,
+                $scope
+            ));
+            $totalLines++;
+        }
+
+        fwrite(STDOUT, "\n");
+    }
+
+    fwrite(STDOUT, $separator);
+    fwrite(STDOUT, sprintf(
+        "Total: %d file(s), %d added line(s) indexed.\n",
+        $totalFiles,
+        $totalLines
+    ));
+    fwrite(STDOUT, $separator . "\n");
+}
+
+/**
  * @return array<string, array{lines: array<int, int>, scopes: array<int, string>, positions: array<int, int>}>
  */
 function buildDiffIndex(string $diff): array
@@ -780,22 +872,25 @@ function buildDiffIndex(string $diff): array
 
         $prefix = $line[0];
         if ($prefix === '+') {
+            // Increment position BEFORE recording so we capture this line's own
+            // position, not the previous line's. The hunk header already consumed
+            // position 1; each subsequent diff line (-, space, +) claims the next slot first.
+            $position++;
             $index[$currentFile]['lines'][$newLine] = $position;
             $index[$currentFile]['positions'][$position] = $newLine;
             if ($scope !== '') {
                 $index[$currentFile]['scopes'][$newLine] = $scope;
             }
             $newLine++;
-            $position++;
             continue;
         }
 
         if ($prefix === ' ') {
+            $position++;
             if ($scope !== '') {
                 $index[$currentFile]['scopes'][$newLine] = $scope;
             }
             $newLine++;
-            $position++;
         }
 
         if ($prefix === '-') {
