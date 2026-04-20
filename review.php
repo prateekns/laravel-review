@@ -69,7 +69,7 @@ main();
 
 function main(): void
 {
-    $dryRun = true;
+    $dryRun = false;
 
     // $openAiApiKey = requireEnv('OPENAI_API_KEY');
     // $githubToken = $dryRun ? (string) (getenv('GITHUB_TOKEN') ?: '') : requireEnv('GITHUB_TOKEN');
@@ -117,12 +117,12 @@ function main(): void
 
     // When DUMP_DIFF_INDEX=1 is set, print the position table and exit.
     // Use this to verify inline comment positions before posting to GitHub.
-    if (isTruthyEnv('DUMP_DIFF_INDEX')) {
+    // if (isTruthyEnv('DUMP_DIFF_INDEX')) {
         dumpDiffIndex($diffIndex);
-        exit(0);
-    }
+        // exit(0);
+    // }
 
-    exit;
+    // exit;
 
     $agentsRules = readAgentsRules();
 

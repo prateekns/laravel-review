@@ -591,6 +591,8 @@ class SubscriptionService
 
         $this->business->createOrGetStripeCustomer();
 
+        return "Test Return";
+
         // Check if the payment method is already attached to the customer
         $isExistingCard = $this->stripe->validatePaymentMethod($paymentMethod, $this->business->stripe_id);
         if ($isExistingCard) {
