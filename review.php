@@ -28,7 +28,7 @@ const MAX_DIFF_BYTES = 400_000;
 const MAX_AGENTS_BYTES = 50_000;
 const MAX_HTTP_RESPONSE_BYTES = 1_000_000;
 const MAX_LOG_BYTES = 20_000;
-const CURL_TIMEOUT_SECONDS = 120;
+const CURL_TIMEOUT_SECONDS = 180;
 const CURL_CONNECT_TIMEOUT_SECONDS = 15;
 const USER_AGENT = 'ai-review-php/1.0';
 
@@ -1009,7 +1009,7 @@ function httpRequest(string $method, string $url, array $headers, ?string $body)
     if ($respBody === false || $errno !== 0) {
         $msg = $error !== '' ? $error : 'Unknown curl error';
         $message = "HTTP request failed: {$msg}\n";
-        // echo $message;
+        echo $message;
         fwrite(STDERR, $message);
         exit(1);
     }
